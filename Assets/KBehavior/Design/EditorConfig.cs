@@ -18,16 +18,15 @@ namespace KBehavior.Design {
         public Vector2 miniMapSize = new Vector2(170, 100);
         [BoxGroup("Grid")]
         public int snapStep = 12;
-        [BoxGroup("Grid")]
-        public float defaultZoom = 1f;
+        
         [BoxGroup("Grid")]
         public float zoomDelta = 0.1f;
         [BoxGroup("Grid")]
-        public int zoomScale = 4;
+        [Range(1,10)]
+        public int maxZoom = 10;
         [BoxGroup("Grid")]
-        [MinMaxSlider(0.1f,10, true)]
-        public Vector2 zoomRange = new Vector2(0.1f,10);
-
+        [Range(1,5)]
+        public int maxLineZoom = 3;
         public int GridWidth => pieceWidth * pieceLenght;
 
         [BoxGroup("Editor")]

@@ -22,18 +22,7 @@ namespace KBehavior.Editor {
         }
         
         
-        private float _viewZoom = 1;
-        private float ViewZoom {
-            get => _viewZoom;
-            set {
-                int d = value > 0 ? -1 : 1;
-                float v = _viewZoom + d * EditorConfig.Instance.zoomDelta;
-                _viewZoom = Mathf.Clamp(v, EditorConfig.Instance.zoomRange.x, EditorConfig.Instance.zoomRange.y);
-                SetLineZoom();
-                Repaint();
-            }
-        }
-
+        private float ViewZoom{ get; set; } = 1;
         private float LineZoom { get; set; } = 1;
 
         [MenuItem("Tools/KBehavior/Editor")]
@@ -52,18 +41,20 @@ namespace KBehavior.Editor {
 
         private Rect MiniMapRect { get; set; }
 
-        private void SetLineZoom() {
-            if ( ViewZoom >= 1 ) {
-                LineZoom = ViewZoom % (3 + 1);
-                if ( LineZoom > 3 ) LineZoom -= 1; 
-                else if ( LineZoom < 1 ) LineZoom += 1;
-            }
+        private void SetZoom(float value) {
+            int d = value > 0 ? -1 : 1;
+            float delta = d * (ViewZoom < 1
+                ? EditorConfig.Instance.zoomDelta / EditorConfig.Instance.maxZoom
+                : EditorConfig.Instance.zoomDelta);
+            ViewZoom = Mathf.Clamp(ViewZoom + delta, 0.1f, EditorConfig.Instance.maxZoom);
+
+            if (ViewZoom >= 1) LineZoom = Mathf.Floor(ViewZoom / EditorConfig.Instance.maxLineZoom) + ViewZoom % EditorConfig.Instance.maxLineZoom;
             else {
-                float ram = ((1 - ViewZoom) * 10) % 3;
-                if ( ram < 1 ) ram += 1;
-                LineZoom = 1 - ram / 10;
+                float scale = ViewZoom * 10;
+                LineZoom = Mathf.Floor(scale / EditorConfig.Instance.maxLineZoom) + scale % EditorConfig.Instance.maxLineZoom;
             }
-            Debug.Log(LineZoom);
+            
+            Repaint();
         }
 
         private void OnGUI() {
@@ -147,7 +138,7 @@ namespace KBehavior.Editor {
                 case EventType.KeyDown: break;
                 case EventType.KeyUp: break;
                 case EventType.ScrollWheel:
-                    ViewZoom = Event.current.delta.y;
+                    SetZoom(Event.current.delta.y);
                     break;
                 case EventType.ValidateCommand: break;
                 case EventType.ExecuteCommand: break;
