@@ -3,6 +3,8 @@ using System.Collections.Generic;
 namespace KBehavior.Base {
     
     public class CompositeBase:NodeBase {
+        public override int maxChildCount { get; } = -1;
+        
         protected int currentIndex;
         protected List<NodeBase> childNode  = new List<NodeBase>();
 

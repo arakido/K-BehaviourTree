@@ -6,10 +6,10 @@ namespace KBehavior.Composite {
     [Description(@"从左到右顺序执行，直到遇到字节的返回Success")]
     [MenuPath("Decorators")]
     public class Selector :CompositeBase{
-        protected override void SwitchFailed(Stage stage) {
+        protected override void SwitchFailure(Stage stage) {
             Stage = SwitchNext() ? Stage.Running : stage;
         }
-        
+
         protected override void SwitchQuit(Stage stage){
             Stage = SwitchNext() ? Stage.Running : Stage.Success;
         }

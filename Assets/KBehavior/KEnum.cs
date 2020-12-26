@@ -3,7 +3,8 @@
     Running,
     Stop,
     Success,
-    Failed,
+    Failure,
+    Error,
     Quit,
 }
 

@@ -14,27 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pieceWidth: 10
   pieceLenght: 10
-  gridBgColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-  gridLineColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  lineColor: {r: 0.18867922, g: 0.18600923, b: 0.18600923, a: 1}
+  gridLineColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
   miniMapSize: {x: 170, y: 100}
   snapStep: 12
-  defaultZoom: 1
   zoomDelta: 0.1
-  zoomScale: 4
-  zoomRange: {x: 0.1, y: 10}
+  maxZoom: 10
+  maxLineZoom: 3
   panSpeed: 1.2
-  gridTexture: {fileID: 0}
+  gridTexture: {fileID: 2800000, guid: 4ab4e605fe422164da65569c46a161d2, type: 3}
   failureSymbol: {fileID: 0}
   successSymbol: {fileID: 0}
-  nodeBackgroundTexture: {fileID: 0}
-  nodeGradient: {fileID: 0}
-  portTexture: {fileID: 0}
+  nodeBackground: {fileID: 2800000, guid: 242a336043a24b14d8c36fd24f0645b8, type: 3}
+  nodeMinSize: {x: 100, y: 50}
+  selectBackground: {fileID: 2800000, guid: 4e02831629a863541a8da989a43791b3, type: 3}
+  selectOffset: {x: 10, y: 2}
+  nodeGradient: {fileID: 2800000, guid: ff41d90c94003c649890db1cbb529fb3, type: 3}
+  nodeOutPotSize: {x: 15, y: 15}
   compositeColor: {r: 0, g: 0, b: 0, a: 0}
   decoratorColor: {r: 0, g: 0, b: 0, a: 0}
   conditionalColor: {r: 0, g: 0, b: 0, a: 0}
   serviceColor: {r: 0, g: 0, b: 0, a: 0}
   taskColor: {r: 0, g: 0, b: 0, a: 0}
-  defaultNodeBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  defaultNodeBackgroundColor: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
   selectedColor: {r: 0, g: 0, b: 0, a: 0}
   runningColor: {r: 0, g: 0, b: 0, a: 0}
   abortColor: {r: 0, g: 0, b: 0, a: 0}
@@ -53,5 +55,6 @@ MonoBehaviour:
   nodeWidthPadding: 12
   portHeight: 20
   portWidthTrim: 50
-  iconSize: 32
+  nodeHeadHigh: 32
   statusIconSize: 16
+  headOffset: {x: 10, y: 10}

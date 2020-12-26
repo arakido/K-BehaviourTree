@@ -4,6 +4,7 @@
         public string GIID { get; }
         public Stage Stage { get; protected set; }
         public NodeBase Parent { get; }
+        public virtual int maxChildCount { get; } = 0;
 
         public NodeBase() {
             nodeName = this.GetType().Name;
@@ -32,8 +33,11 @@
                 case Stage.Success:
                     SwitchSuccess(stage);
                     break;
-                case Stage.Failed:
-                    SwitchFailed(stage);
+                case Stage.Failure:
+                    SwitchFailure(stage);
+                    break;
+                case Stage.Error:
+                    SwitchError(stage);
                     break;
                 case Stage.Quit:
                     SwitchQuit(stage);
@@ -57,12 +61,17 @@
             Stage = stage;
         }
         
-        protected virtual void SwitchFailed(Stage stage){
+        protected virtual void SwitchFailure(Stage stage){
+            Stage = stage;
+        }
+        
+        protected virtual void SwitchError(Stage stage){
             Stage = stage;
         }
         
         protected virtual void SwitchQuit(Stage stage){
             Stage = stage;
         }
+        
     }
 }

@@ -1,7 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using System.Reflection;
+using KBehavior.Base;
 
 namespace KBehavior.Design {
     public static class EditorTools {
+        private static readonly GenericMenu behaviorNodeMenu = new GenericMenu();
+        //private static readonly Dictionary<Type, Type> behaviorNodes
+        
+        public static event System.Action NodeClickAction;
+
+        public static void OnNodeClick() {
+            NodeClickAction?.Invoke();
+            NodeClickAction = null;
+        }
         public static Color WithAlpha(this Color color, float alpha) {
             color.a = alpha;
             return color;
@@ -58,5 +72,86 @@ namespace KBehavior.Design {
             tex.Apply();
             return tex;
         }
+
+        public static void InitNodeMenu(GenericMenu.MenuFunction2 action) {
+            if ( behaviorNodeMenu.GetItemCount() <= 0 ) {
+                var infos = GetNodeMenuOfType<BehaviorAttribute>();
+                for ( int i = 0; i < infos.Count; i++ ) {
+                    var info = infos[i];
+                    if ( string.IsNullOrEmpty(info.name) ) continue;
+                    string path = info.name;
+                    if ( !string.IsNullOrEmpty(info.path) ) {
+                        path = info.path + "/" + path;
+                    }
+                    behaviorNodeMenu.AddItem(new GUIContent(path),false, action, info );
+                }
+            }
+            
+            behaviorNodeMenu.ShowAsContext();
+        }
+
+        private static Dictionary<Type, List<NodeAttribute>> cacheNodeInfos = new Dictionary<Type, List<NodeAttribute>>();
+        
+        public static List<NodeAttribute> GetNodeMenuOfType<T>() where T : BehaviorAttribute {
+            Type t = typeof(T);
+            if ( cacheNodeInfos.ContainsKey(t) ) return cacheNodeInfos[t];
+            List<NodeAttribute> nodeInfoList = new List<NodeAttribute>();
+            Type[] types = GetNodeTypes(typeof(NodeBase));
+            foreach ( Type type in types ) {
+                NodeAttribute attribute = new NodeAttribute(type);
+                nodeInfoList.Add(attribute);
+            }
+            cacheNodeInfos.Add(t,nodeInfoList);
+            return nodeInfoList;
+        }
+
+        public static Type[] GetNodeTypes(Type nodeType) {
+            List<Type> result = new List<Type>();
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for ( int i = 0; i < assemblies.Length; i++ ) {
+                Assembly assembly = assemblies[i];
+                if(assembly.IsDynamic) continue;
+                Type[] types = assembly.GetExportedTypes();
+                for ( int j = 0; j < types.Length; j++ ) {
+                    Type type = types[j];
+                    if ( nodeType.IsAssignableFrom(type) && !type.IsAbstract ) {
+                        result.Add(type);
+                    }
+                }
+            }
+            return result.ToArray();
+        }
+
+        private static float labelWidth;
+
+        public static void SetLabelWidth(float width, bool cover = false) {
+            labelWidth = EditorGUIUtility.labelWidth;
+            if (cover) labelWidth = width;
+            EditorGUIUtility.labelWidth = width;
+        }
+
+        public static void RestoreLabelWidth() {
+            EditorGUIUtility.labelWidth = labelWidth;
+        }
+
+        public static Texture2D LoadTexture(string name) {
+            return Resources.Load<Texture2D>(name);
+        }
+        
+        public static GUIStyle CreateHeaderStyle()
+        {
+            var style = new GUIStyle();
+            style.normal.textColor = Color.white;
+            style.fontSize = 15;
+            style.fontStyle = FontStyle.Bold;
+            style.imagePosition = ImagePosition.ImageLeft;
+            return style;
+        }
+
+        public static void DrawBox(Rect rect, GUIStyle style) {
+            GUI.Box(rect,string.Empty,style);
+        }
+
+        
     }
 }
