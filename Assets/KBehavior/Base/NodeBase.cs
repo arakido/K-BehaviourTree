@@ -5,6 +5,7 @@
         public Stage Stage { get; protected set; }
         public NodeBase Parent { get; }
         public virtual int maxChildCount { get; } = 0;
+        public virtual bool multipleParent { get; } = false;
 
         public NodeBase() {
             nodeName = this.GetType().Name;

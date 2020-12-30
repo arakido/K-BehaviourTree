@@ -3,22 +3,16 @@ using UnityEditor;
 using UnityEngine;
 
 namespace KBehavior.Editor {
-    public class DrawGrid {
-        private static DrawGrid instance = null;
-
-        public static DrawGrid Instance {
-            get => instance ?? ( instance = new DrawGrid() );
-            set => instance = value;
+    public class DrawGrid : Singleton<DrawGrid> {
+        public void DrawBackground() {
+            Rect canvasRect = GraphDrawEditor.Instance.CanvasRect;
+            EditorTools.DrawBox(canvasRect, StyleSheet.Styles.gridBg);
+            EditorTools.DrawBox(canvasRect, StyleSheet.Styles.gridBorder);
         }
         
-        public void DrawBackground(Rect canvasRect) {
-            EditorTools.DrawBox(canvasRect, StyleSheet.gridBg);
-            EditorTools.DrawBox(canvasRect, StyleSheet.gridBorder);
-        }
-        
-        public void DrawGridLine(Rect canvasRect,float zoom, Vector2 offset = default) {
+        public void DrawGridLine(float zoom, Vector2 offset = default) {
             if ( Event.current.type != EventType.Repaint )  return; 
-            
+            Rect canvasRect = GraphDrawEditor.Instance.CanvasRect;
             float step = ViewConfig.Instance.pieceWidth * zoom ;
             float gap = ViewConfig.Instance.GridWidth * zoom ;
 

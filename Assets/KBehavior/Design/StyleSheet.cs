@@ -16,12 +16,17 @@ namespace KBehavior.Design {
             return Resources.Load<StyleSheet>(assetName);
         }
         
-        public Styles styles;
-        public Icons icons;
+        public StyleConfig styles;
+        public IconConfig icons;
+        public ColorConfig colors;
+
+        public static StyleConfig Styles => Instance.styles;
+        public static IconConfig Icons => Instance.icons;
+        public static ColorConfig Colors => Instance.colors;
 
 
         [System.Serializable]
-        public class Styles {
+        public class StyleConfig {
             public GUIStyle gridBg;
             public GUIStyle gridBorder;
             public GUIStyle nodeBg;
@@ -34,7 +39,7 @@ namespace KBehavior.Design {
         }
 
         [System.Serializable]
-        public class Icons
+        public class IconConfig
         {
             public Texture2D bezierTexture;
 
@@ -48,22 +53,16 @@ namespace KBehavior.Design {
             [Header("Fixed")]
             public Texture2D canvasIcon;
         }
+        
+        [System.Serializable]
+        public class ColorConfig {
+            public Color failure = new Color(1.0f, 0.3f, 0.3f);
+            public Color success = new Color(0.4f, 0.7f, 0.2f);
+            public Color running = Color.yellow;
+            public Color stop = new Color(0.7f, 0.7f, 1f, 0.8f);
+            public Color error = Color.red;
+        }
 
-        public static GUIStyle gridBg => Instance.styles.gridBg;
-        public static GUIStyle gridBorder => Instance.styles.gridBorder;
-        public static GUIStyle node => Instance.styles.nodeBg;
-        public static GUIStyle selectNode => Instance.styles.selectBg;
-        public static GUIStyle nameStyle => Instance.styles.name;
-        public static GUIStyle nodeOutPortBg => Instance.styles.nodeOutPortBg;
-        public static GUIStyle nodeOutPortEmpty => Instance.styles.nodeOutPortEmpty;
-        public static GUIStyle nodeOutPortConnected => Instance.styles.nodeOutPortConnected;
-
-        ///----------------------------------------------------------------------------------------------
-
-        public static Texture2D canvasIcon => Instance.icons.canvasIcon;
-        public static Texture2D bezierTexture => Instance.icons.bezierTexture;
-
-        ///Return an arrow based on direction vector
         /*public static Texture2D GetDirectionArrow(Vector2 dir) {
             if ( dir.normalized == Vector2.left ) { return arrowLeft; }
             if ( dir.normalized == Vector2.right ) { return arrowRight; }
@@ -71,20 +70,5 @@ namespace KBehavior.Design {
             if ( dir.normalized == Vector2.down ) { return arrowBottom; }
             return circle;
         }*/
-
-        public static void Draw(Rect rect, GUIStyle style) {
-            GUI.Box(rect,"");
-        }
-        
-        public static Color GetStatusColor(Stage status) {
-            switch ( status ) {
-                case ( Stage.Failure ): return new Color(1.0f, 0.3f, 0.3f);
-                case ( Stage.Success ): return new Color(0.4f, 0.7f, 0.2f);
-                case ( Stage.Running ): return Color.yellow;
-                case ( Stage.Stop ): return new Color(0.7f, 0.7f, 1f, 0.8f);
-                case ( Stage.Error ): return Color.red;
-            }
-            return Color.white;
-        }
     }
 }

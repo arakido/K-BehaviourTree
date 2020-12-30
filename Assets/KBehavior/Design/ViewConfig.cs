@@ -74,7 +74,7 @@ namespace KBehavior.Design {
         [Title("Runtime Colors")]
         public Color runningStatusColor = new Color(0.1f, 1f, 0.54f, 1f);
 
-        public Color successColor = new Color(0.1f, 1f, 0.54f, 0.25f);
+        public Color connectShadow = new Color(0f, 0f, 0f, 0.1f);
         public Color failureColor = new Color(1f, 0.1f, 0.1f, 0.25f);
         public Color abortedColor = new Color(0.1f, 0.1f, 1f, 0.25f);
         public Color interruptedColor = new Color(0.7f, 0.5f, 0.3f, 0.4f);

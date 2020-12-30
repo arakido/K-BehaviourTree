@@ -23,10 +23,16 @@ namespace KBehavior.Editor {
 
         public static bool mouseMove => currentEvent.type == EventType.MouseMove;
         public static bool mouseDrag => currentEvent.type == EventType.MouseDrag;
+        public static bool leftMouseDrag => leftMouse && mouseDrag;
 
         public static bool repaint => currentEvent.type == EventType.Repaint;
         public static bool layout => currentEvent.type == EventType.Layout;
         public static bool refresh => repaint || layout;
+
+        public static bool doubleClick => currentEvent.clickCount == 2;
+
+        public static bool control => currentEvent.control;
+        public static Vector2 delta => currentEvent.delta;
 
         public static void Use() {
             currentEvent.Use();

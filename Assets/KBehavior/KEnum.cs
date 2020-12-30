@@ -1,14 +1,19 @@
-﻿public enum Stage {
-    Waiting = 0,
-    Running,
-    Stop,
-    Success,
-    Failure,
-    Error,
-    Quit,
-}
-
-namespace KBehavior {
+﻿namespace KBehavior {
+    public enum Stage {
+        Waiting = 0,
+        Running,
+        Stop,
+        Success,
+        Failure,
+        Error,
+        Quit,
+    }
+    
+    public enum ViewDirection {
+        Horizontal,
+        Vertical,
+    }
+    
     public enum NodeType {
         /// <summary>
         /// 组合节点

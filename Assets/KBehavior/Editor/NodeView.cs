@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace KBehavior.Editor {
     public class NodeView {
-        public int ID;
-        public Vector2 position => viewRect.position;
-        public Vector2 size => viewRect.size;
         public event Action HandleEventCallBack;
+        public int ID;
 
         public Rect viewRect;
         private Rect headRect;
@@ -28,7 +26,7 @@ namespace KBehavior.Editor {
         private void ResizeView() {
             viewRect = default;
             //viewRect.height = ViewConfig.Instance.nodeHeadHigh;
-            viewRect.size = StyleSheet.nameStyle.CalcSize(nameContent) + StyleSheet.nameStyle.contentOffset * 2;
+            viewRect.size = StyleSheet.Styles.name.CalcSize(nameContent) + StyleSheet.Styles.name.contentOffset * 2;
 
         }
         public void ResizeContent(){}
@@ -40,15 +38,17 @@ namespace KBehavior.Editor {
         public void SetContent(){}
 
         public void DrawView(bool select) {
-            viewRect = GUILayout.Window(ID, viewRect, DrawNode, string.Empty, StyleSheet.node,
+            viewRect = GUILayout.Window(ID, viewRect, DrawNode, string.Empty, StyleSheet.Styles.nodeBg,
                                         GUILayout.MinWidth(ViewConfig.Instance.nodeMinSize.x),
                                         GUILayout.MinHeight(ViewConfig.Instance.nodeMinSize.y));
+            EditorGUIUtility.AddCursorRect(viewRect, MouseCursor.Link);
             if ( select ) {
-                GUI.Box(viewRect, string.Empty, StyleSheet.selectNode);
+                GUI.Box(viewRect, string.Empty, StyleSheet.Styles.selectBg);
             }
         }
 
         private void DrawNode(int id) {
+            Event e = Event.current;
             DrawHeadView();
             DrawContentView();
             HandleEvents();
@@ -59,21 +59,21 @@ namespace KBehavior.Editor {
         }
 
         private void DrawHeadView() {
-            GUILayout.Box(nameContent,StyleSheet.nameStyle);
+            GUILayout.Box(nameContent,StyleSheet.Styles.name);
         }
         
         private void DrawContentView(){}
         
         public void DrawOutPortBg() {
             var outPortRect = new Rect(viewRect.xMin, viewRect.yMax - 4, viewRect.width, 12);
-            EditorTools.DrawBox(outPortRect, StyleSheet.nodeOutPortBg);
+            EditorTools.DrawBox(outPortRect, StyleSheet.Styles.nodeOutPortBg);
         }
 
         public Rect DrawOutPort(float offset, bool connected) {
             var portRect = new Rect(default, ViewConfig.Instance.nodeOutPotSize);
             portRect.center = new Vector2( viewRect.width * offset  + viewRect.xMin, viewRect.yMax + 6);
             if(!connected)EditorGUIUtility.AddCursorRect(portRect, MouseCursor.ArrowPlus);
-            EditorTools.DrawBox(portRect, connected ? StyleSheet.nodeOutPortConnected : StyleSheet.nodeOutPortEmpty);
+            EditorTools.DrawBox(portRect, connected ? StyleSheet.Styles.nodeOutPortConnected : StyleSheet.Styles.nodeOutPortEmpty);
             return portRect;
         }
 

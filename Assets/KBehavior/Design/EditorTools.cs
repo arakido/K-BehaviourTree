@@ -10,12 +10,6 @@ namespace KBehavior.Design {
         private static readonly GenericMenu behaviorNodeMenu = new GenericMenu();
         //private static readonly Dictionary<Type, Type> behaviorNodes
         
-        public static event System.Action NodeClickAction;
-
-        public static void OnNodeClick() {
-            NodeClickAction?.Invoke();
-            NodeClickAction = null;
-        }
         public static Color WithAlpha(this Color color, float alpha) {
             color.a = alpha;
             return color;
@@ -73,7 +67,10 @@ namespace KBehavior.Design {
             return tex;
         }
 
-        public static void InitNodeMenu(GenericMenu.MenuFunction2 action) {
+        private static Action<NodeAttribute> creatNodeCallBack;
+
+        public static void InitNodeMenu(Action<NodeAttribute> action) {
+            creatNodeCallBack = action;
             if ( behaviorNodeMenu.GetItemCount() <= 0 ) {
                 var infos = GetNodeMenuOfType<BehaviorAttribute>();
                 for ( int i = 0; i < infos.Count; i++ ) {
@@ -83,11 +80,16 @@ namespace KBehavior.Design {
                     if ( !string.IsNullOrEmpty(info.path) ) {
                         path = info.path + "/" + path;
                     }
-                    behaviorNodeMenu.AddItem(new GUIContent(path),false, action, info );
+                    behaviorNodeMenu.AddItem(new GUIContent(path),false, MenuCallBack, info );
                 }
             }
-            
             behaviorNodeMenu.ShowAsContext();
+        }
+
+        private static void MenuCallBack(object userdata) {
+            if ( userdata is NodeAttribute node ) {
+                creatNodeCallBack?.Invoke(node);
+            }
         }
 
         private static Dictionary<Type, List<NodeAttribute>> cacheNodeInfos = new Dictionary<Type, List<NodeAttribute>>();
@@ -152,6 +154,26 @@ namespace KBehavior.Design {
             GUI.Box(rect,string.Empty,style);
         }
 
-        
+        public static void ResolveTangents(Vector2 from, Vector2 to, ViewDirection direction, float curvature, out Vector2 fromTangent, out Vector2 toTangent) {
+            switch ( direction ) {
+                case ViewDirection.Vertical :
+                    var tangentY = Mathf.Abs(from.y - to.y) * curvature;
+                    tangentY = Mathf.Max(tangentY, 25);
+            
+                    fromTangent = new Vector2(0, tangentY);
+                    toTangent = new Vector2(0, -tangentY);
+                    break;
+                case ViewDirection.Horizontal:
+                    var tangentX = Mathf.Abs(from.x - to.x) * curvature;
+                    tangentX = Mathf.Max(tangentX, 25);
+                    fromTangent = new Vector2(tangentX, 0);
+                    toTangent = new Vector2(-tangentX, 0);
+                    break;
+                default:
+                    fromTangent = default;
+                    toTangent = default;
+                    break;
+            }
+        }
     }
 }
